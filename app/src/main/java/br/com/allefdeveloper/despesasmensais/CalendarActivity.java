@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import butterknife.BindColor;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 public class CalendarActivity extends AppCompatActivity {
     @BindColor(R.color.colorAccent)
@@ -22,6 +24,7 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         ButterKnife.bind(this);
         setContentView(R.layout.activity_calendar);
         cal = (MaterialCalendarView) findViewById(R.id.calendarView);
