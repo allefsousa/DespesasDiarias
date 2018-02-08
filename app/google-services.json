@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "996366387042",
+    "firebase_url": "https://gastosdiarios-edae8.firebaseio.com",
+    "project_id": "gastosdiarios-edae8",
+    "storage_bucket": "gastosdiarios-edae8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996366387042:android:eaade981f0d93b67",
+        "android_client_info": {
+          "package_name": "br.com.allefdeveloper.despesasmensais"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "996366387042-mp6uml2c0dohbudtfv4u9qifrgemdgtl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFWWmv80PNuKIYxiOhA4f66GQDajQ8jFE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
