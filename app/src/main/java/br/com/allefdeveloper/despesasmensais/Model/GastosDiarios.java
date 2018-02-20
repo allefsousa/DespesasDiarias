@@ -5,40 +5,24 @@ package br.com.allefdeveloper.despesasmensais.Model;
  */
 
 public class GastosDiarios {
-    private int dia;
-    private int mes;
-    private int ano;
+
     private String titulo;
     private String descricao;
     private Double valor;
     private String formaPagamento;
+    private String dataDispesa;
 
 
     public GastosDiarios() {
     }
 
-    public int getDia() {
-        return dia;
+
+    public String getDataDispesa() {
+        return dataDispesa;
     }
 
-    public void setDia(int dia) {
-        this.dia = dia;
-    }
-
-    public int getMes() {
-        return mes;
-    }
-
-    public void setMes(int mes) {
-        this.mes = mes;
-    }
-
-    public int getAno() {
-        return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
+    public void setDataDispesa(String dataDispesa) {
+        this.dataDispesa = dataDispesa;
     }
 
     public String getTitulo() {

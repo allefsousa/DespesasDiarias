@@ -45,19 +45,6 @@ public class AdicionarGastosActivity extends AppCompatActivity {
 
 // TODO: 08/02/2018  organizar essa bagunça
 
-        gastos.setTitulo("");
-        gastos.setValor(10.50);
-        gastos.setAno(recebedata[2]);
-        gastos.setDia(recebedata[0]);
-        gastos.setMes(recebedata[1]);
-
-        db.collection(String.valueOf(gastos.getMes())).document(String.valueOf(gastos.getDia())).set(gastos).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(AdicionarGastosActivity.this, "User Registered",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     private void inicializaFirebase() {
