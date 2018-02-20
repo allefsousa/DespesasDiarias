@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
 import br.com.allefdeveloper.despesasmensais.Model.GastosDiarios;
 import br.com.allefdeveloper.despesasmensais.Utils.DataeHora;
@@ -98,13 +99,13 @@ public class CalendarActivity extends AppCompatActivity {
                 String data = txtdata.getText().toString();
                 String[] mesat = data.split("/");
                 if (data != null) {
-
+                    gastos.setId(UUID.randomUUID().toString());
                     gastos.setDataDispesa(txtdata.getText().toString());
                     gastos.setTitulo(txtTitulo.getText().toString());
                     gastos.setValor(Double.parseDouble(txtvalor.getText().toString()));
                     gastos.setDescricao(txtDescricao.getText().toString());
                     gastos.setFormaPagamento(txtformadepagamento.getText().toString());
-                    reference.child(mesat[1]).setValue(gastos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    reference.child(mesat[1]).child(gastos.getId()).setValue(gastos).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             limpasCampos();
