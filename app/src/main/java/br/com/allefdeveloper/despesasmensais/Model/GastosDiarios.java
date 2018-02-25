@@ -17,6 +17,7 @@ public class GastosDiarios {
     private Double valor;
     private String formaPagamento;
     private String dataDispesa;
+    private String categoria;
 
 
     public GastosDiarios() {
@@ -71,6 +72,13 @@ public class GastosDiarios {
         this.formaPagamento = formaPagamento;
     }
 
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
     @Exclude
     public Map<String, Object> MapAtualiza() {
@@ -81,6 +89,7 @@ public class GastosDiarios {
         result.put("valor",valor);
         result.put("formaPagamento", formaPagamento);
         result.put("dataDispesa", dataDispesa);
+        result.put("categoria",categoria);
 
         return result;
     }

@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Despesas Mensais</string>
+
+    <array name="categorias">
+        <item>"Combustivel"</item>
+        <item>"Supermercado"</item>
+        <item>"Bobeiras"</item>
+        <item>"Comidas de Fnds"</item>
+        <item>"Diversos"</item>
+    </array>
 </resources>
