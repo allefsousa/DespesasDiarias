@@ -3,7 +3,13 @@ package br.com.allefdeveloper.despesasmensais;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -14,19 +20,37 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import br.com.allefdeveloper.despesasmensais.Model.GastosDiarios;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ExibirGastosActivity extends AppCompatActivity {
     int quantCategorias;
     Calendar myCalendar;
+    @BindView(R.id.datapesquisa)
+    Spinner datapes;
+    List<GastosDiarios> arraygastos;
     private PieChart mChart;
-    private String[] categorias;
+    private String[] categorias, mes;
     private FirebaseDatabase database;
     private DatabaseReference myref;
+    private GastosDiarios gastos;
+    Double[] gastosPorCategoria ;
+    List<Double> gs;
+    Map<String,Double> vv = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +58,74 @@ public class ExibirGastosActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_exibir_gastos);
+        ButterKnife.bind(this);
         categorias = getResources().getStringArray(R.array.categorias);
+        mes = getResources().getStringArray(R.array.mes);
+        gastos = new GastosDiarios();
+        arraygastos = new ArrayList<>();
+        gastosPorCategoria = new Double[4];
         myCalendar = Calendar.getInstance();
-
         inicializaFirebase();
+        ArrayAdapter<String> mesadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mes);
+        datapes.setAdapter(mesadapter);
+
+
+        datapes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
+                arraygastos.clear();
+                mChart.clear();
+                myref.addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+                       if(dataSnapshot.hasChild(String.valueOf(i))){
+                           for (DataSnapshot d : dataSnapshot.child(String.valueOf(i)).getChildren()) {
+                               gastos = d.getValue(GastosDiarios.class);
+                               arraygastos.add(gastos);
+                           }
+                           trataDados(arraygastos);
+
+                       }
+
+                   }
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               });
+//
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         quantCategorias = categorias.length;
         mChart = findViewById(R.id.chart1);
-        personalizaGrafico(mChart);
 
 
+    }
+
+    private void trataDados(List<GastosDiarios> arraygastos) {
+
+        for (int i=0;i<arraygastos.size();i++){
+            for (int j =0;j<categorias.length;j++) {
+               if(arraygastos.get(i).getCategoria().equals(categorias[j])){
+                   if(vv.containsKey(arraygastos.get(i).getCategoria())) {
+                       Double val = vv.get(arraygastos.get(i).getCategoria());
+                       val = val + arraygastos.get(i).getValor();
+                       vv.put(arraygastos.get(i).getCategoria(),val);
+                   }else {
+                       vv.put(arraygastos.get(i).getCategoria(),arraygastos.get(i).getValor());
+                   }
+               }
+            }
+        }
+
+        personalizaGrafico(mChart,arraygastos,vv);
     }
 
     private void inicializaFirebase() {
@@ -52,40 +134,29 @@ public class ExibirGastosActivity extends AppCompatActivity {
 
     }
 
-    private void personalizaGrafico(PieChart mChart) {
+    private void personalizaGrafico(PieChart mChart,List<GastosDiarios> gg ,Map valores) {
         mChart.getDescription().setEnabled(false);
         mChart.setExtraOffsets(5, 10, 5, 5);
         mChart.setUsePercentValues(true);
-
         mChart.setDragDecelerationFrictionCoef(0.95f);
-
-
         mChart.setDrawHoleEnabled(true);
         mChart.setHoleColor(Color.WHITE);
-
         mChart.setTransparentCircleColor(Color.WHITE);
         mChart.setTransparentCircleAlpha(110);
-
         mChart.setHoleRadius(58f);
         mChart.setTransparentCircleRadius(61f);
-
         mChart.setDrawCenterText(true);
-
         mChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
         mChart.setRotationEnabled(true);
         mChart.setHighlightPerTapEnabled(true);
 
-
-        setData(quantCategorias, 100);
+        setData( 100,valores);
         mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        // mChart.spin(2000, 0, 360);
-
 
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
@@ -98,38 +169,27 @@ public class ExibirGastosActivity extends AppCompatActivity {
 
     }
 
-    private void setData(int count, float range) {
+    private void setData( float range,Map gg) {
 
         float mult = range;
-
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
+        ArrayList<PieEntry> entries = new ArrayList<>();
 
 
-        entries.add(new PieEntry((float) ((26.0) + mult / 5),
-                categorias[0 % categorias.length],
-                getResources().getDrawable(R.drawable.common_full_open_on_phone)));
 
-        entries.add(new PieEntry((float) ((10.0) + mult / 5),
-                categorias[0 % categorias.length],
-                getResources().getDrawable(R.drawable.common_full_open_on_phone)));
+        Set<String> chaves = gg.keySet();
+        gg.entrySet();
 
-        entries.add(new PieEntry((float) ((13.0) + mult / 5),
-                categorias[0 % categorias.length],
-                getResources().getDrawable(R.drawable.common_full_open_on_phone)));
-
-        entries.add(new PieEntry((float) ((25.0) + mult / 5),
-                categorias[0 % categorias.length],
-                getResources().getDrawable(R.drawable.common_full_open_on_phone)));
-
-        entries.add(new PieEntry((float) ((26.0) + mult / 5),
-                categorias[0 % categorias.length],
-                getResources().getDrawable(R.drawable.common_full_open_on_phone)));
+        for(String chave : chaves){
+            Double recebe = (Double) gg.get(chave);
 
 
-        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+                entries.add(new PieEntry((float) (recebe + mult / 5),
+                        chave,
+                        getResources().getDrawable(R.drawable.ic_launcher_background)));
+
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Gastos Mensais ");
 
         dataSet.setDrawIcons(false);
 

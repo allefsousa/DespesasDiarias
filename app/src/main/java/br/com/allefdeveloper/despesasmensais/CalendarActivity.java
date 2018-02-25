@@ -98,6 +98,7 @@ public class CalendarActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String data = txtdata.getText().toString();
                 String[] mesat = data.split("/");
+                int mes = Integer.parseInt(mesat[1]);
                 if (data != null) {
                     gastos.setId(UUID.randomUUID().toString());
                     gastos.setDataDispesa(txtdata.getText().toString());
@@ -105,7 +106,7 @@ public class CalendarActivity extends AppCompatActivity {
                     gastos.setValor(Double.parseDouble(txtvalor.getText().toString()));
                     gastos.setDescricao(txtDescricao.getText().toString());
                     gastos.setFormaPagamento(txtformadepagamento.getText().toString());
-                    reference.child(mesat[1]).child(gastos.getId()).setValue(gastos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    reference.child(String.valueOf(mes)).child(gastos.getId()).setValue(gastos).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             limpasCampos();
