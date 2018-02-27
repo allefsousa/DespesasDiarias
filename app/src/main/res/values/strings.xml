@@ -2,6 +2,7 @@
     <string name="app_name">Despesas Mensais</string>
 
     <array name="categorias">
+        <item>"Selecione uma categoria.."</item>
         <item>"Combustivel"</item>
         <item>"Supermercado"</item>
         <item>"Bobeiras"</item>
@@ -24,4 +25,8 @@
         <item>"Dezembro"</item>
 
     </array>
+    <string name="title_activity_menu">Menu </string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

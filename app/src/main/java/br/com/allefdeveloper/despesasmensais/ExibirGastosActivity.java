@@ -2,6 +2,7 @@ package br.com.allefdeveloper.despesasmensais;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -55,10 +56,12 @@ public class ExibirGastosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_exibir_gastos);
         ButterKnife.bind(this);
+        getSupportActionBar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         categorias = getResources().getStringArray(R.array.categorias);
         mes = getResources().getStringArray(R.array.mes);
         gastos = new GastosDiarios();
@@ -85,9 +88,14 @@ public class ExibirGastosActivity extends AppCompatActivity {
                            }
                            trataDados(arraygastos);
 
+                       }else if(i != 0){
+                           Snackbar.make(findViewById(android.R.id.content), "Não existem dados para serem Exibidos nesse periodo !!",
+                                   Snackbar.LENGTH_LONG).show();
                        }
 
                    }
+
+
 
                    @Override
                    public void onCancelled(DatabaseError databaseError) {
@@ -156,7 +164,7 @@ public class ExibirGastosActivity extends AppCompatActivity {
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
