@@ -66,7 +66,6 @@ public class AddDispesasActivity extends AppCompatActivity {
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         firebaseConfig();
-        DataeHora.retornadaData();
         gastos = new GastosDiarios();
         myCalendar = Calendar.getInstance();
         spcategoria.requestFocus();
